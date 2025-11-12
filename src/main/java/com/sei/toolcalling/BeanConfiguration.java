@@ -3,6 +3,8 @@ package com.sei.toolcalling;
 import com.sei.toolcalling.domain.port.api.TodoServicePort;
 import com.sei.toolcalling.domain.port.spi.TodoPersistencePort;
 import com.sei.toolcalling.domain.service.TodoServiceImpl;
+import com.sei.toolcalling.tools.TodoTools;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,5 +14,12 @@ public class BeanConfiguration {
     @Bean
     public TodoServicePort todoServicePort(TodoPersistencePort todoPersistencePort) {
         return new TodoServiceImpl(todoPersistencePort);
+    }
+
+    @Bean
+    ChatClient chatClient(ChatClient.Builder builder) {
+        return builder.defaultSystem("You are a friendly chat bot that answers question")
+                .defaultTools(new TodoTools())
+                .build();
     }
 }
